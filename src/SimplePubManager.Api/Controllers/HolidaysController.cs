@@ -68,7 +68,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var totalCount = filtered.Count();
                 var holidays = filtered
-                    .OrderByDescending(h => h.CreatedAt)
+                    .OrderByDescending(h => h.RequestedAt)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToList();

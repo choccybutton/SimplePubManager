@@ -61,7 +61,7 @@ namespace SimplePubManager.Api.Controllers
 
                 if (token == null || user == null)
                 {
-                    return Unauthorized(new ApiResponse<object>
+                    return StatusCode(StatusCodes.Status401Unauthorized, new ApiResponse<object>
                     {
                         Error = new ApiError
                         {
@@ -128,7 +128,7 @@ namespace SimplePubManager.Api.Controllers
 
                 if (!valid)
                 {
-                    return Unauthorized(new ApiResponse<object>
+                    return StatusCode(StatusCodes.Status401Unauthorized, new ApiResponse<object>
                     {
                         Error = new ApiError
                         {
@@ -204,7 +204,7 @@ namespace SimplePubManager.Api.Controllers
 
                 if (sessionToken == null)
                 {
-                    return Unauthorized(new ApiResponse<object>
+                    return StatusCode(StatusCodes.Status401Unauthorized, new ApiResponse<object>
                     {
                         Error = new ApiError
                         {

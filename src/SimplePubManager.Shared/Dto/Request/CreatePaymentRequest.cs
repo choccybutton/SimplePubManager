@@ -1,14 +1,14 @@
 namespace SimplePubManager.Shared.Dto.Request
 {
     /// <summary>
-    /// Request to record a payment.
+    /// Request to record a payment for staff.
     /// </summary>
     public class CreatePaymentRequest
     {
         /// <summary>
-        /// The ID of the bill being paid (optional).
+        /// The ID of the staff member receiving the payment (optional).
         /// </summary>
-        public Guid? BillId { get; set; }
+        public Guid? StaffId { get; set; }
 
         /// <summary>
         /// The amount of the payment.
@@ -16,13 +16,13 @@ namespace SimplePubManager.Shared.Dto.Request
         public decimal Amount { get; set; }
 
         /// <summary>
-        /// The payment method.
+        /// The type of payment.
         /// </summary>
-        public string Method { get; set; } = string.Empty;
+        public string Type { get; set; } = "ShiftPayment";
 
         /// <summary>
-        /// Optional reference number for the payment.
+        /// The ID of the related shift (optional).
         /// </summary>
-        public string? ReferenceNumber { get; set; }
+        public Guid? RelatedShiftId { get; set; }
     }
 }

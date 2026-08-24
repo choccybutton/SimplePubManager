@@ -82,7 +82,6 @@ namespace SimplePubManager.Api.Controllers
                         Amount = b.Amount,
                         DueDate = b.DueDate,
                         Status = b.Status.ToString(),
-                        Vendor = b.Vendor,
                         CreatedAt = b.CreatedAt
                     }),
                     Page = page,
@@ -142,8 +141,7 @@ namespace SimplePubManager.Api.Controllers
                     Description = request.Description ?? string.Empty,
                     Amount = request.Amount,
                     DueDate = request.DueDate,
-                    Status = BillStatus.Unpaid,
-                    Vendor = request.Vendor,
+                    Status = BillStatus.Pending,
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -159,7 +157,6 @@ namespace SimplePubManager.Api.Controllers
                             Amount = createdBill.Amount,
                             DueDate = createdBill.DueDate,
                             Status = createdBill.Status.ToString(),
-                            Vendor = createdBill.Vendor,
                             CreatedAt = createdBill.CreatedAt
                         }
                     });
@@ -214,7 +211,6 @@ namespace SimplePubManager.Api.Controllers
                         Amount = bill.Amount,
                         DueDate = bill.DueDate,
                         Status = bill.Status.ToString(),
-                        Vendor = bill.Vendor,
                         CreatedAt = bill.CreatedAt
                     }
                 });
@@ -276,11 +272,6 @@ namespace SimplePubManager.Api.Controllers
                     bill.DueDate = request.DueDate;
                 }
 
-                if (!string.IsNullOrWhiteSpace(request.Vendor))
-                {
-                    bill.Vendor = request.Vendor;
-                }
-
                 await _billRepository.UpdateAsync(bill);
 
                 return Ok(new ApiResponse<BillResponse>
@@ -292,7 +283,6 @@ namespace SimplePubManager.Api.Controllers
                         Amount = bill.Amount,
                         DueDate = bill.DueDate,
                         Status = bill.Status.ToString(),
-                        Vendor = bill.Vendor,
                         CreatedAt = bill.CreatedAt
                     }
                 });
@@ -348,11 +338,11 @@ namespace SimplePubManager.Api.Controllers
                     Items = payments.Select(p => new PaymentResponse
                     {
                         Id = p.Id,
-                        BillId = p.BillId,
+                        StaffId = p.StaffId,
                         Amount = p.Amount,
-                        Method = p.Method,
-                        Status = p.Status.ToString(),
-                        ReferenceNumber = p.ReferenceNumber,
+                        Type = p.Type.ToString(),
+                        RelatedShiftId = p.RelatedShiftId,
+                        Date = p.Date,
                         CreatedAt = p.CreatedAt
                     }),
                     Page = page,
@@ -393,14 +383,14 @@ namespace SimplePubManager.Api.Controllers
         {
             try
             {
-                if (request == null || request.Amount <= 0 || string.IsNullOrWhiteSpace(request.Method))
+                if (request == null || request.Amount <= 0)
                 {
                     return BadRequest(new ApiResponse<object>
                     {
                         Error = new ApiError
                         {
                             Code = "VALIDATION_ERROR",
-                            Message = "Amount and method are required"
+                            Message = "Amount is required"
                         }
                     });
                 }
@@ -409,11 +399,11 @@ namespace SimplePubManager.Api.Controllers
                 {
                     Id = Guid.NewGuid(),
                     OrganizationId = orgId,
-                    BillId = request.BillId,
+                    StaffId = request.StaffId,
                     Amount = request.Amount,
-                    Method = request.Method,
-                    Status = PaymentStatus.Recorded,
-                    ReferenceNumber = request.ReferenceNumber,
+                    Type = PaymentType.ShiftPayment,
+                    RelatedShiftId = request.RelatedShiftId,
+                    Date = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -425,11 +415,11 @@ namespace SimplePubManager.Api.Controllers
                         Data = new PaymentResponse
                         {
                             Id = createdPayment.Id,
-                            BillId = createdPayment.BillId,
+                            StaffId = createdPayment.StaffId,
                             Amount = createdPayment.Amount,
-                            Method = createdPayment.Method,
-                            Status = createdPayment.Status.ToString(),
-                            ReferenceNumber = createdPayment.ReferenceNumber,
+                            Type = createdPayment.Type.ToString(),
+                            RelatedShiftId = createdPayment.RelatedShiftId,
+                            Date = createdPayment.Date,
                             CreatedAt = createdPayment.CreatedAt
                         }
                     });

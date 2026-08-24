@@ -192,7 +192,7 @@ namespace SimplePubManager.Api.Controllers
                     Type = shiftType,
                     StartTime = request.StartTime,
                     EndTime = request.EndTime,
-                    Status = ShiftStatus.Scheduled,
+                    Status = ShiftStatus.Active,
                     CreatedBy = Guid.Empty,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -429,7 +429,7 @@ namespace SimplePubManager.Api.Controllers
                     });
                 }
 
-                shift.Status = ShiftStatus.InProgress;
+                shift.Status = ShiftStatus.Active;
                 await _shiftRepository.UpdateAsync(shift);
 
                 return Ok(new ApiResponse<ShiftResponse>
@@ -490,7 +490,7 @@ namespace SimplePubManager.Api.Controllers
                 }
 
                 shift.EndTime = DateTime.UtcNow;
-                shift.Status = ShiftStatus.Completed;
+                shift.Status = ShiftStatus.Approved;
                 await _shiftRepository.UpdateAsync(shift);
 
                 return Ok(new ApiResponse<ShiftResponse>
@@ -559,9 +559,9 @@ namespace SimplePubManager.Api.Controllers
                     {
                         shift.Areas.Add(new SimplePubManager.Domain.Entities.ShiftArea
                         {
-                            Id = Guid.NewGuid(),
                             ShiftId = shift.Id,
-                            AreaId = areaId
+                            AreaId = areaId,
+                            AssignedAt = DateTime.UtcNow
                         });
                     }
                 }

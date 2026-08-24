@@ -75,12 +75,12 @@ namespace SimplePubManager.Api.Controllers
 
                 if (assignedTo.HasValue)
                 {
-                    filtered = filtered.Where(t => t.AssignedToId == assignedTo.Value);
+                    filtered = filtered.Where(t => t.AssignedToUserId == assignedTo.Value);
                 }
 
                 if (areaId.HasValue)
                 {
-                    filtered = filtered.Where(t => t.AreaId == areaId.Value);
+                    filtered = filtered.Where(t => t.AssignedToAreaId == areaId.Value);
                 }
 
                 var totalCount = filtered.Count();
@@ -160,7 +160,7 @@ namespace SimplePubManager.Api.Controllers
                     Description = request.Description ?? string.Empty,
                     AssignedToUserId = request.AssignedToId,
                     AssignedToAreaId = request.AreaId,
-                    Status = SimplePubManager.Domain.Enums.TaskStatus.Open,
+                    Status = SimplePubManager.Domain.Enums.TaskStatus.Pending,
                     CreatedAt = DateTime.UtcNow,
                     DueDate = DateTime.UtcNow.AddDays(7)
                 };
@@ -175,9 +175,9 @@ namespace SimplePubManager.Api.Controllers
                             Id = createdTask.Id,
                             Title = createdTask.Title,
                             Description = createdTask.Description,
-                            AssignedToId = createdTask.AssignedToId,
+                            AssignedToId = createdTask.AssignedToUserId,
                             Status = createdTask.Status.ToString(),
-                            AreaId = createdTask.AreaId,
+                            AreaId = createdTask.AssignedToAreaId,
                             CreatedAt = createdTask.CreatedAt
                         }
                     });

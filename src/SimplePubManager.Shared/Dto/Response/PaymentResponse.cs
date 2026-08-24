@@ -1,7 +1,7 @@
 namespace SimplePubManager.Shared.Dto.Response
 {
     /// <summary>
-    /// Response containing payment information.
+    /// Response containing payment information for staff.
     /// </summary>
     public class PaymentResponse
     {
@@ -11,9 +11,9 @@ namespace SimplePubManager.Shared.Dto.Response
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The ID of the bill being paid (if any).
+        /// The ID of the staff member receiving the payment.
         /// </summary>
-        public Guid? BillId { get; set; }
+        public Guid? StaffId { get; set; }
 
         /// <summary>
         /// The payment amount.
@@ -21,19 +21,19 @@ namespace SimplePubManager.Shared.Dto.Response
         public decimal Amount { get; set; }
 
         /// <summary>
-        /// The payment method.
+        /// The type of payment.
         /// </summary>
-        public string Method { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
-        /// The status of the payment.
+        /// The ID of the related shift.
         /// </summary>
-        public string Status { get; set; } = string.Empty;
+        public Guid? RelatedShiftId { get; set; }
 
         /// <summary>
-        /// The reference number for the payment.
+        /// The date of the payment.
         /// </summary>
-        public string? ReferenceNumber { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// When the payment was recorded.
