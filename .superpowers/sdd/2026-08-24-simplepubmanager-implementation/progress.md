@@ -338,3 +338,20 @@ Task 8: complete (commits [base7]..3a1db5a, review clean)
 **Purpose:** Business logic layer between repositories and controllers
 **Scope:** AuthService, PasswordHashService, JwtTokenService, DeviceAuthService, PaymentCalculationService, RecurringTaskService
 
+
+### Task 9: Create Core Application Services
+**Status:** DONE ✓
+**Services:** 6 (Auth, JWT, Password, DeviceAuth, PaymentCalc, RecurringTask) ✓
+**Additional:** RecurringTaskTemplateRepository created ✓
+**Build:** Clean (0 errors, 8 version warnings) ✓
+**Commit:** ad109d8
+
+Task 9: complete (commits [base7]..ad109d8, review clean)
+
+---
+
+### Task 10: Create API Controllers
+**Status:** Dispatching
+**Purpose:** HTTP endpoint handlers, request/response mapping
+**Scope:** ShiftsController, TasksController, HolidaysController, PaymentsController, AuthController, StaffController, AreasController, DevicesController
+

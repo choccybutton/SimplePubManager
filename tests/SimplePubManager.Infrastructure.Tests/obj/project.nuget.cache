@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "CGIubujc7+k=",
+  "dgSpecHash": "yhfcan3x4JQ=",
   "success": true,
   "projectFilePath": "C:\\Dev\\repos\\SimplePubManager\\tests\\SimplePubManager.Infrastructure.Tests\\SimplePubManager.Infrastructure.Tests.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\MartinButton\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\fluentassertions\\6.12.0\\fluentassertions.6.12.0.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.11\\microsoft.entityframeworkcore.8.0.11.nupkg.sha512",
@@ -19,12 +20,28 @@
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.0.0\\microsoft.identitymodel.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.0.0\\microsoft.identitymodel.jsonwebtokens.8.0.0.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.identitymodel.logging\\8.0.0\\microsoft.identitymodel.logging.8.0.0.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.0.0\\microsoft.identitymodel.tokens.8.0.0.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\moq\\4.20.70\\moq.4.20.70.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\npgsql\\8.0.6\\npgsql.8.0.6.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.11\\npgsql.entityframeworkcore.postgresql.8.0.11.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\system.configuration.configurationmanager\\4.4.0\\system.configuration.configurationmanager.4.4.0.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\system.diagnostics.eventlog\\6.0.0\\system.diagnostics.eventlog.6.0.0.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.0.0\\system.identitymodel.tokens.jwt.8.0.0.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.4.0\\system.security.cryptography.protecteddata.4.4.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "SimplePubManager.Infrastructure depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead.",
+      "libraryId": "System.IdentityModel.Tokens.Jwt",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

@@ -1034,10 +1034,12 @@
       },
       "SimplePubManager.Infrastructure/1.0.0": {
         "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
           "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11",
           "SimplePubManager.Application": "1.0.0",
-          "SimplePubManager.Domain": "1.0.0"
+          "SimplePubManager.Domain": "1.0.0",
+          "System.IdentityModel.Tokens.Jwt": "8.0.0"
         },
         "runtime": {
           "SimplePubManager.Infrastructure.dll": {

@@ -1,0 +1,452 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using SimplePubManager.Domain.Enums;
+using SimplePubManager.Infrastructure.Data.Repositories;
+using SimplePubManager.Shared.Dto;
+using SimplePubManager.Shared.Dto.Request;
+using SimplePubManager.Shared.Dto.Response;
+
+namespace SimplePubManager.Api.Controllers
+{
+    /// <summary>
+    /// Controller for payment and billing endpoints.
+    /// </summary>
+    [ApiController]
+    [Route("api/v1/organizations/{orgId}/payments")]
+    [Authorize]
+    public class PaymentsController : ControllerBase
+    {
+        private readonly PaymentRepository _paymentRepository;
+        private readonly BillRepository _billRepository;
+        private readonly ILogger<PaymentsController> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the PaymentsController class.
+        /// </summary>
+        public PaymentsController(
+            PaymentRepository paymentRepository,
+            BillRepository billRepository,
+            ILogger<PaymentsController> logger)
+        {
+            _paymentRepository = paymentRepository ?? throw new ArgumentNullException(nameof(paymentRepository));
+            _billRepository = billRepository ?? throw new ArgumentNullException(nameof(billRepository));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>
+        /// Lists bills for an organization with filtering.
+        /// </summary>
+        /// <param name="orgId">The organization ID</param>
+        /// <param name="status">Optional status filter</param>
+        /// <param name="page">Page number (default 1)</param>
+        /// <param name="pageSize">Items per page (default 20)</param>
+        /// <returns>Paginated list of bills</returns>
+        [HttpGet("bills")]
+        [ProducesResponseType(typeof(ApiResponse<PaginatedResponse<BillResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetBills(
+            Guid orgId,
+            [FromQuery] string? status = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20)
+        {
+            try
+            {
+                if (page < 1) page = 1;
+                if (pageSize < 1) pageSize = 20;
+                if (pageSize > 100) pageSize = 100;
+
+                var allBills = await _billRepository.GetAllAsync();
+                var filtered = allBills.Where(b => b.OrganizationId == orgId);
+
+                if (!string.IsNullOrWhiteSpace(status) && Enum.TryParse<BillStatus>(status, ignoreCase: true, out var billStatus))
+                {
+                    filtered = filtered.Where(b => b.Status == billStatus);
+                }
+
+                var totalCount = filtered.Count();
+                var bills = filtered
+                    .OrderByDescending(b => b.CreatedAt)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var response = new PaginatedResponse<BillResponse>
+                {
+                    Items = bills.Select(b => new BillResponse
+                    {
+                        Id = b.Id,
+                        Description = b.Description,
+                        Amount = b.Amount,
+                        DueDate = b.DueDate,
+                        Status = b.Status.ToString(),
+                        Vendor = b.Vendor,
+                        CreatedAt = b.CreatedAt
+                    }),
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+
+                return Ok(new ApiResponse<PaginatedResponse<BillResponse>>
+                {
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving bills");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "INTERNAL_ERROR",
+                            Message = "An error occurred while retrieving bills"
+                        }
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Creates a new bill.
+        /// </summary>
+        /// <param name="orgId">The organization ID</param>
+        /// <param name="request">The bill creation request</param>
+        /// <returns>The created bill</returns>
+        [HttpPost("bills")]
+        [ProducesResponseType(typeof(ApiResponse<BillResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateBill(Guid orgId, [FromBody] CreateBillRequest request)
+        {
+            try
+            {
+                if (request == null || request.Amount <= 0 || request.DueDate == default)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "VALIDATION_ERROR",
+                            Message = "Amount and due date are required"
+                        }
+                    });
+                }
+
+                var bill = new SimplePubManager.Domain.Entities.Bill
+                {
+                    Id = Guid.NewGuid(),
+                    OrganizationId = orgId,
+                    Description = request.Description ?? string.Empty,
+                    Amount = request.Amount,
+                    DueDate = request.DueDate,
+                    Status = BillStatus.Unpaid,
+                    Vendor = request.Vendor,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var createdBill = await _billRepository.AddAsync(bill);
+
+                return CreatedAtAction(nameof(GetBillById), new { orgId, id = createdBill.Id },
+                    new ApiResponse<BillResponse>
+                    {
+                        Data = new BillResponse
+                        {
+                            Id = createdBill.Id,
+                            Description = createdBill.Description,
+                            Amount = createdBill.Amount,
+                            DueDate = createdBill.DueDate,
+                            Status = createdBill.Status.ToString(),
+                            Vendor = createdBill.Vendor,
+                            CreatedAt = createdBill.CreatedAt
+                        }
+                    });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating bill");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "INTERNAL_ERROR",
+                            Message = "An error occurred while creating the bill"
+                        }
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Gets details for a specific bill.
+        /// </summary>
+        /// <param name="orgId">The organization ID</param>
+        /// <param name="id">The bill ID</param>
+        /// <returns>The bill details</returns>
+        [HttpGet("bills/{id}")]
+        [ProducesResponseType(typeof(ApiResponse<BillResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetBillById(Guid orgId, Guid id)
+        {
+            try
+            {
+                var bill = await _billRepository.GetByIdAsync(id);
+                if (bill == null || bill.OrganizationId != orgId)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "BILL_NOT_FOUND",
+                            Message = "Bill not found"
+                        }
+                    });
+                }
+
+                return Ok(new ApiResponse<BillResponse>
+                {
+                    Data = new BillResponse
+                    {
+                        Id = bill.Id,
+                        Description = bill.Description,
+                        Amount = bill.Amount,
+                        DueDate = bill.DueDate,
+                        Status = bill.Status.ToString(),
+                        Vendor = bill.Vendor,
+                        CreatedAt = bill.CreatedAt
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving bill");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "INTERNAL_ERROR",
+                            Message = "An error occurred while retrieving the bill"
+                        }
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Updates a bill.
+        /// </summary>
+        /// <param name="orgId">The organization ID</param>
+        /// <param name="id">The bill ID</param>
+        /// <param name="request">The update request</param>
+        /// <returns>The updated bill</returns>
+        [HttpPut("bills/{id}")]
+        [ProducesResponseType(typeof(ApiResponse<BillResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateBill(Guid orgId, Guid id, [FromBody] CreateBillRequest request)
+        {
+            try
+            {
+                var bill = await _billRepository.GetByIdAsync(id);
+                if (bill == null || bill.OrganizationId != orgId)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "BILL_NOT_FOUND",
+                            Message = "Bill not found"
+                        }
+                    });
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.Description))
+                {
+                    bill.Description = request.Description;
+                }
+
+                if (request.Amount > 0)
+                {
+                    bill.Amount = request.Amount;
+                }
+
+                if (request.DueDate != default)
+                {
+                    bill.DueDate = request.DueDate;
+                }
+
+                if (!string.IsNullOrWhiteSpace(request.Vendor))
+                {
+                    bill.Vendor = request.Vendor;
+                }
+
+                await _billRepository.UpdateAsync(bill);
+
+                return Ok(new ApiResponse<BillResponse>
+                {
+                    Data = new BillResponse
+                    {
+                        Id = bill.Id,
+                        Description = bill.Description,
+                        Amount = bill.Amount,
+                        DueDate = bill.DueDate,
+                        Status = bill.Status.ToString(),
+                        Vendor = bill.Vendor,
+                        CreatedAt = bill.CreatedAt
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating bill");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "INTERNAL_ERROR",
+                            Message = "An error occurred while updating the bill"
+                        }
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Lists payments for an organization.
+        /// </summary>
+        /// <param name="orgId">The organization ID</param>
+        /// <param name="page">Page number (default 1)</param>
+        /// <param name="pageSize">Items per page (default 20)</param>
+        /// <returns>Paginated list of payments</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<PaginatedResponse<PaymentResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetPayments(
+            Guid orgId,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 20)
+        {
+            try
+            {
+                if (page < 1) page = 1;
+                if (pageSize < 1) pageSize = 20;
+                if (pageSize > 100) pageSize = 100;
+
+                var allPayments = await _paymentRepository.GetAllAsync();
+                var filtered = allPayments.Where(p => p.OrganizationId == orgId);
+
+                var totalCount = filtered.Count();
+                var payments = filtered
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                var response = new PaginatedResponse<PaymentResponse>
+                {
+                    Items = payments.Select(p => new PaymentResponse
+                    {
+                        Id = p.Id,
+                        BillId = p.BillId,
+                        Amount = p.Amount,
+                        Method = p.Method,
+                        Status = p.Status.ToString(),
+                        ReferenceNumber = p.ReferenceNumber,
+                        CreatedAt = p.CreatedAt
+                    }),
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
+
+                return Ok(new ApiResponse<PaginatedResponse<PaymentResponse>>
+                {
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving payments");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "INTERNAL_ERROR",
+                            Message = "An error occurred while retrieving payments"
+                        }
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Records a new payment.
+        /// </summary>
+        /// <param name="orgId">The organization ID</param>
+        /// <param name="request">The payment creation request</param>
+        /// <returns>The created payment</returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<PaymentResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreatePayment(Guid orgId, [FromBody] CreatePaymentRequest request)
+        {
+            try
+            {
+                if (request == null || request.Amount <= 0 || string.IsNullOrWhiteSpace(request.Method))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "VALIDATION_ERROR",
+                            Message = "Amount and method are required"
+                        }
+                    });
+                }
+
+                var payment = new SimplePubManager.Domain.Entities.Payment
+                {
+                    Id = Guid.NewGuid(),
+                    OrganizationId = orgId,
+                    BillId = request.BillId,
+                    Amount = request.Amount,
+                    Method = request.Method,
+                    Status = PaymentStatus.Recorded,
+                    ReferenceNumber = request.ReferenceNumber,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var createdPayment = await _paymentRepository.AddAsync(payment);
+
+                return CreatedAtAction(nameof(GetPayments), new { orgId },
+                    new ApiResponse<PaymentResponse>
+                    {
+                        Data = new PaymentResponse
+                        {
+                            Id = createdPayment.Id,
+                            BillId = createdPayment.BillId,
+                            Amount = createdPayment.Amount,
+                            Method = createdPayment.Method,
+                            Status = createdPayment.Status.ToString(),
+                            ReferenceNumber = createdPayment.ReferenceNumber,
+                            CreatedAt = createdPayment.CreatedAt
+                        }
+                    });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating payment");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "INTERNAL_ERROR",
+                            Message = "An error occurred while creating the payment"
+                        }
+                    });
+            }
+        }
+    }
+}
