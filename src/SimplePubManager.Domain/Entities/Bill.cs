@@ -1,3 +1,5 @@
+using SimplePubManager.Domain.Enums;
+
 namespace SimplePubManager.Domain.Entities
 {
     /// <summary>
@@ -14,6 +16,38 @@ namespace SimplePubManager.Domain.Entities
         /// Foreign key to the organization.
         /// </summary>
         public Guid OrganizationId { get; set; }
+
+        /// <summary>
+        /// Description of the bill.
+        /// </summary>
+        public required string Description { get; set; }
+
+        /// <summary>
+        /// Amount of the bill.
+        /// </summary>
+        public decimal Amount { get; set; }
+
+        /// <summary>
+        /// Due date for the bill.
+        /// </summary>
+        public DateTime DueDate { get; set; }
+
+        /// <summary>
+        /// Date when the bill was paid (optional).
+        /// </summary>
+        public DateTime? PaidDate { get; set; }
+
+        /// <summary>
+        /// Current status of the bill.
+        /// </summary>
+        public BillStatus Status { get; set; }
+
+        /// <summary>
+        /// Timestamp when the bill was created.
+        /// </summary>
+        public DateTime CreatedAt { get; set; }
+
+        // Navigation properties
 
         /// <summary>
         /// Navigation property to the organization.

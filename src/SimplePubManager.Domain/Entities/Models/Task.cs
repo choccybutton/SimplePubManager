@@ -1,14 +1,14 @@
 using SimplePubManager.Domain.Enums;
 
-namespace SimplePubManager.Domain.Entities
+namespace SimplePubManager.Domain.Entities.Models
 {
     /// <summary>
-    /// Represents a template for recurring tasks in the organization.
+    /// Represents a task or work item in the organization.
     /// </summary>
-    public class RecurringTaskTemplate
+    public class Task
     {
         /// <summary>
-        /// Unique identifier for the recurring task template.
+        /// Unique identifier for the task.
         /// </summary>
         public Guid Id { get; set; }
 
@@ -18,42 +18,52 @@ namespace SimplePubManager.Domain.Entities
         public Guid OrganizationId { get; set; }
 
         /// <summary>
-        /// Title of the recurring task template.
+        /// Title of the task.
         /// </summary>
         public required string Title { get; set; }
 
         /// <summary>
-        /// Optional description of the recurring task template.
+        /// Optional description of the task.
         /// </summary>
         public string? Description { get; set; }
 
         /// <summary>
-        /// Foreign key to the user assigned to recurring tasks from this template (optional).
+        /// Foreign key to the user assigned to this task (optional).
         /// </summary>
         public Guid? AssignedToUserId { get; set; }
 
         /// <summary>
-        /// Foreign key to the area assigned to recurring tasks from this template (optional).
+        /// Foreign key to the area assigned to this task (optional).
         /// </summary>
         public Guid? AssignedToAreaId { get; set; }
 
         /// <summary>
-        /// Recurrence pattern for the recurring task.
+        /// Due date for the task.
         /// </summary>
-        public RecurrencePattern RecurrencePattern { get; set; }
+        public DateTime DueDate { get; set; }
 
         /// <summary>
-        /// Date of the next occurrence of this recurring task.
+        /// Current status of the task.
         /// </summary>
-        public DateTime NextOccurrenceDate { get; set; }
+        public Enums.TaskStatus Status { get; set; }
 
         /// <summary>
-        /// Whether this recurring task template is active.
+        /// Foreign key to the user who completed this task (optional).
         /// </summary>
-        public bool Active { get; set; }
+        public Guid? CompletedBy { get; set; }
 
         /// <summary>
-        /// Timestamp when the template was created.
+        /// Timestamp when the task was completed (optional).
+        /// </summary>
+        public DateTime? CompletedAt { get; set; }
+
+        /// <summary>
+        /// Optional notes on the completion of the task.
+        /// </summary>
+        public string? CompletionNotes { get; set; }
+
+        /// <summary>
+        /// Timestamp when the task was created.
         /// </summary>
         public DateTime CreatedAt { get; set; }
 
@@ -73,5 +83,10 @@ namespace SimplePubManager.Domain.Entities
         /// Navigation property to the assigned area.
         /// </summary>
         public Area? AssignedArea { get; set; }
+
+        /// <summary>
+        /// Navigation property to the user who completed this task.
+        /// </summary>
+        public User? CompletedByUser { get; set; }
     }
 }

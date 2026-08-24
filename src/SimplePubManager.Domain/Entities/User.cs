@@ -56,5 +56,15 @@ namespace SimplePubManager.Domain.Entities
         /// Collection of shifts worked by this user.
         /// </summary>
         public ICollection<Shift> Shifts { get; set; } = new List<Shift>();
+
+        /// <summary>
+        /// Collection of holidays requested by this user.
+        /// </summary>
+        public ICollection<Holiday> Holidays { get; set; } = new List<Holiday>();
+
+        /// <summary>
+        /// Collection of tasks assigned to this user.
+        /// </summary>
+        public ICollection<Models.Task> AssignedTasks { get; set; } = new List<Models.Task>();
     }
 }
