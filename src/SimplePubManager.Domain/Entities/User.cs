@@ -51,5 +51,10 @@ namespace SimplePubManager.Domain.Entities
         /// Navigation property to the organization this user belongs to.
         /// </summary>
         public Organization? Organization { get; set; }
+
+        /// <summary>
+        /// Collection of shifts worked by this user.
+        /// </summary>
+        public ICollection<Shift> Shifts { get; set; } = new List<Shift>();
     }
 }
