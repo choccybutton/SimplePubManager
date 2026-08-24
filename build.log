@@ -1,0 +1,28 @@
+  Determining projects to restore...
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Api\SimplePubManager.Api.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead. [C:\Dev\repos\SimplePubManager\SimplePubManager.sln]
+C:\Dev\repos\SimplePubManager\tests\SimplePubManager.Api.Tests\SimplePubManager.Api.Tests.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead. [C:\Dev\repos\SimplePubManager\SimplePubManager.sln]
+  Restored C:\Dev\repos\SimplePubManager\src\SimplePubManager.Infrastructure\SimplePubManager.Infrastructure.csproj (in 1.87 sec).
+  7 of 8 projects are up-to-date for restore.
+C:\Dev\repos\SimplePubManager\tests\SimplePubManager.Api.Tests\SimplePubManager.Api.Tests.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead.
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Api\SimplePubManager.Api.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead.
+  SimplePubManager.Shared -> C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\bin\Debug\net8.0\SimplePubManager.Shared.dll
+  SimplePubManager.Domain -> C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\bin\Debug\net8.0\SimplePubManager.Domain.dll
+  SimplePubManager.Application -> C:\Dev\repos\SimplePubManager\src\SimplePubManager.Application\bin\Debug\net8.0\SimplePubManager.Application.dll
+  SimplePubManager.Application.Tests -> C:\Dev\repos\SimplePubManager\tests\SimplePubManager.Application.Tests\bin\Debug\net8.0\SimplePubManager.Application.Tests.dll
+  SimplePubManager.Infrastructure -> C:\Dev\repos\SimplePubManager\src\SimplePubManager.Infrastructure\bin\Debug\net8.0\SimplePubManager.Infrastructure.dll
+  SimplePubManager.Api -> C:\Dev\repos\SimplePubManager\src\SimplePubManager.Api\bin\Debug\net8.0\SimplePubManager.Api.dll
+  SimplePubManager.Infrastructure.Tests -> C:\Dev\repos\SimplePubManager\tests\SimplePubManager.Infrastructure.Tests\bin\Debug\net8.0\SimplePubManager.Infrastructure.Tests.dll
+  SimplePubManager.Api.Tests -> C:\Dev\repos\SimplePubManager\tests\SimplePubManager.Api.Tests\bin\Debug\net8.0\SimplePubManager.Api.Tests.dll
+
+Build succeeded.
+
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Api\SimplePubManager.Api.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead. [C:\Dev\repos\SimplePubManager\SimplePubManager.sln]
+C:\Dev\repos\SimplePubManager\tests\SimplePubManager.Api.Tests\SimplePubManager.Api.Tests.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead. [C:\Dev\repos\SimplePubManager\SimplePubManager.sln]
+C:\Dev\repos\SimplePubManager\tests\SimplePubManager.Api.Tests\SimplePubManager.Api.Tests.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead.
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Api\SimplePubManager.Api.csproj : warning NU1603: SimplePubManager.Api depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead.
+    4 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:22.29
+
+Workload updates are available. Run `dotnet workload list` for more information.

@@ -1,0 +1,12 @@
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\bin\Debug\net8.0\SimplePubManager.Domain.deps.json
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\bin\Debug\net8.0\SimplePubManager.Domain.dll
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\bin\Debug\net8.0\SimplePubManager.Domain.pdb
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\SimplePubManager.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\SimplePubManager.Domain.AssemblyInfoInputs.cache
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\SimplePubManager.Domain.AssemblyInfo.cs
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\SimplePubManager.Domain.csproj.CoreCompileInputs.cache
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\SimplePubManager.Domain.sourcelink.json
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\SimplePubManager.Domain.dll
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\refint\SimplePubManager.Domain.dll
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\SimplePubManager.Domain.pdb
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Domain\obj\Debug\net8.0\ref\SimplePubManager.Domain.dll

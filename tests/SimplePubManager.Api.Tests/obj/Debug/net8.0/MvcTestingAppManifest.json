@@ -1,0 +1,7 @@
+{
+  "SimplePubManager.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Dev\\repos\\SimplePubManager\\src\\SimplePubManager.Api",
+  "SimplePubManager.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Dev\\repos\\SimplePubManager\\src\\SimplePubManager.Application",
+  "SimplePubManager.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Dev\\repos\\SimplePubManager\\src\\SimplePubManager.Domain",
+  "SimplePubManager.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Dev\\repos\\SimplePubManager\\src\\SimplePubManager.Infrastructure",
+  "SimplePubManager.Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Dev\\repos\\SimplePubManager\\src\\SimplePubManager.Shared"
+}
