@@ -66,5 +66,15 @@ namespace SimplePubManager.Domain.Entities
         /// Collection of tasks assigned to this user.
         /// </summary>
         public ICollection<Models.Task> AssignedTasks { get; set; } = new List<Models.Task>();
+
+        /// <summary>
+        /// Collection of PINs created for this user for quick-swap device login.
+        /// </summary>
+        public ICollection<UserPin> Pins { get; set; } = new List<UserPin>();
+
+        /// <summary>
+        /// Collection of active device sessions for this user.
+        /// </summary>
+        public ICollection<DeviceSession> DeviceSessions { get; set; } = new List<DeviceSession>();
     }
 }
