@@ -446,3 +446,22 @@ Integration: ⏳ In progress
 ### Task 12: Authentication Middleware & Configuration
 **Status:** Dispatching
 
+
+### Task 12: Authentication Middleware & API Configuration
+**Status:** DONE ✓
+**Config Files:** Program.cs, appsettings.json, MappingProfile, ExceptionHandlingMiddleware ✓
+**DI Container:** All repositories + services registered ✓
+**JWT Auth:** Configured with HS256, 24-hour expiry ✓
+**CORS:** Frontend (localhost:3000) + API (localhost:5000) allowed ✓
+**AutoMapper:** 8+ entity↔DTO mappings ✓
+**Build:** Clean (0 errors, 13 minor warnings) ✓
+**API Startup:** Ready ✓
+**Commit:** 4e73e1b
+
+Task 12: complete (commits [base7]..4e73e1b, review clean)
+
+---
+
+### Task 13: Integration Tests & Verification
+**Status:** Dispatching
+

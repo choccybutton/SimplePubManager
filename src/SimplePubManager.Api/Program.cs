@@ -132,3 +132,5 @@ app.MapGet("/health", () => Results.Ok("API is running"))
     .AllowAnonymous();
 
 app.Run();
+
+public partial class Program { }
