@@ -112,6 +112,16 @@ namespace SimplePubManager.Infrastructure.Services
         }
 
         /// <summary>
+        /// Hashes a password using BCrypt.
+        /// </summary>
+        /// <param name="password">The plain text password to hash</param>
+        /// <returns>The bcrypt hashed password</returns>
+        public string HashPassword(string password)
+        {
+            return _passwordHashService.HashPassword(password);
+        }
+
+        /// <summary>
         /// Changes a user's password after verifying the old password.
         /// </summary>
         /// <param name="userId">The user ID</param>
