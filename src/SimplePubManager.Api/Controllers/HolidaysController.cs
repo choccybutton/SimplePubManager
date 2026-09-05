@@ -47,7 +47,6 @@ namespace SimplePubManager.Api.Controllers
             }
             throw new InvalidOperationException("Organization not found in request context");
         }
-        }
 
         /// <summary>
         /// Lists holidays for an organization with filtering.
@@ -178,7 +177,7 @@ namespace SimplePubManager.Api.Controllers
                 var holiday = new SimplePubManager.Domain.Entities.Holiday
                 {
                     Id = Guid.NewGuid(),
-                    OrganizationId = orgId,
+                    OrganizationId = GetOrganizationId(),
                     StaffId = userId,
                     StartDate = request.StartDate,
                     EndDate = request.EndDate,
@@ -189,7 +188,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdHoliday = await _holidayRepository.AddAsync(holiday);
 
-                return CreatedAtAction(nameof(GetById), new { id = createdHoliday.Id },
+                return CreatedAtAction(nameof(GetHolidayById), new { id = createdHoliday.Id },
                     new ApiResponse<HolidayResponse>
                     {
                         Data = new HolidayResponse
@@ -233,7 +232,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var holiday = await _holidayRepository.GetByIdAsync(id);
-                if (holiday == null || holiday.OrganizationId != orgId)
+                if (holiday == null || holiday.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {
@@ -290,7 +289,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var holiday = await _holidayRepository.GetByIdAsync(id);
-                if (holiday == null || holiday.OrganizationId != orgId)
+                if (holiday == null || holiday.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {
@@ -351,7 +350,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var holiday = await _holidayRepository.GetByIdAsync(id);
-                if (holiday == null || holiday.OrganizationId != orgId)
+                if (holiday == null || holiday.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {

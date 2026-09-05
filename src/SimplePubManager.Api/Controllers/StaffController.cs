@@ -63,7 +63,6 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<PaginatedResponse<StaffResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetStaff(
-            Guid orgId,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
         {
@@ -73,6 +72,7 @@ namespace SimplePubManager.Api.Controllers
                 if (pageSize < 1) pageSize = 20;
                 if (pageSize > 100) pageSize = 100;
 
+                var orgId = GetOrganizationId();
                 var allStaff = await _userRepository.GetAllAsync();
                 var filtered = allStaff.Where(u => u.OrganizationId == orgId);
 
@@ -134,6 +134,7 @@ namespace SimplePubManager.Api.Controllers
         {
             try
             {
+                var orgId = GetOrganizationId();
                 if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
                 {
                     return BadRequest(new ApiResponse<object>
@@ -172,7 +173,7 @@ namespace SimplePubManager.Api.Controllers
                     });
                 }
 
-                return CreatedAtAction(nameof(GetById), new { id = user.Id },
+                return CreatedAtAction(nameof(GetStaffById), new { id = user.Id },
                     new ApiResponse<StaffResponse>
                     {
                         Data = new StaffResponse
@@ -215,7 +216,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var user = await _userRepository.GetByIdAsync(id);
-                if (user == null || user.OrganizationId != orgId)
+                if (user == null || user.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {
@@ -272,7 +273,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var user = await _userRepository.GetByIdAsync(id);
-                if (user == null || user.OrganizationId != orgId)
+                if (user == null || user.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {

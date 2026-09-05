@@ -124,6 +124,7 @@ namespace SimplePubManager.Api.Controllers
         {
             try
             {
+                var orgId = GetOrganizationId();
                 if (request == null || string.IsNullOrWhiteSpace(request.Name))
                 {
                     return BadRequest(new ApiResponse<object>
@@ -147,7 +148,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdArea = await _areaRepository.AddAsync(area);
 
-                return CreatedAtAction(nameof(GetById), new { id = createdArea.Id },
+                return CreatedAtAction(nameof(GetAreaById), new { id = createdArea.Id },
                     new ApiResponse<AreaResponse>
                     {
                         Data = new AreaResponse
@@ -188,7 +189,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var area = await _areaRepository.GetByIdAsync(id);
-                if (area == null || area.OrganizationId != orgId)
+                if (area == null || area.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {
@@ -243,7 +244,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var area = await _areaRepository.GetByIdAsync(id);
-                if (area == null || area.OrganizationId != orgId)
+                if (area == null || area.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {

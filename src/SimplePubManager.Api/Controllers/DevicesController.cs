@@ -205,7 +205,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var device = await _deviceRepository.GetByIdAsync(id);
-                if (device == null || device.OrganizationId != orgId)
+                if (device == null || device.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {

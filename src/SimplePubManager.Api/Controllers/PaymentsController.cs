@@ -47,7 +47,6 @@ namespace SimplePubManager.Api.Controllers
             }
             throw new InvalidOperationException("Organization not found in request context");
         }
-        }
 
         /// <summary>
         /// Lists bills for an organization with filtering.
@@ -151,7 +150,7 @@ namespace SimplePubManager.Api.Controllers
                 var bill = new SimplePubManager.Domain.Entities.Bill
                 {
                     Id = Guid.NewGuid(),
-                    OrganizationId = orgId,
+                    OrganizationId = GetOrganizationId(),
                     Description = request.Description ?? string.Empty,
                     Amount = request.Amount,
                     DueDate = request.DueDate,
@@ -161,7 +160,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdBill = await _billRepository.AddAsync(bill);
 
-                return CreatedAtAction(nameof(GetById), new { id = createdBill.Id },
+                return CreatedAtAction(nameof(GetBillById), new { id = createdBill.Id },
                     new ApiResponse<BillResponse>
                     {
                         Data = new BillResponse
@@ -204,7 +203,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var bill = await _billRepository.GetByIdAsync(id);
-                if (bill == null || bill.OrganizationId != orgId)
+                if (bill == null || bill.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {
@@ -259,7 +258,7 @@ namespace SimplePubManager.Api.Controllers
             try
             {
                 var bill = await _billRepository.GetByIdAsync(id);
-                if (bill == null || bill.OrganizationId != orgId)
+                if (bill == null || bill.OrganizationId != GetOrganizationId())
                 {
                     return NotFound(new ApiResponse<object>
                     {
@@ -327,7 +326,6 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<PaginatedResponse<PaymentResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetPayments(
-            Guid orgId,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
         {
@@ -337,6 +335,7 @@ namespace SimplePubManager.Api.Controllers
                 if (pageSize < 1) pageSize = 20;
                 if (pageSize > 100) pageSize = 100;
 
+                var orgId = GetOrganizationId();
                 var allPayments = await _paymentRepository.GetAllAsync();
                 var filtered = allPayments.Where(p => p.OrganizationId == orgId);
 
@@ -397,6 +396,7 @@ namespace SimplePubManager.Api.Controllers
         {
             try
             {
+                var orgId = GetOrganizationId();
                 if (request == null || request.Amount <= 0)
                 {
                     return BadRequest(new ApiResponse<object>
@@ -423,7 +423,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdPayment = await _paymentRepository.AddAsync(payment);
 
-                return CreatedAtAction(nameof(GetPayments), new { orgId },
+                return StatusCode(StatusCodes.Status201Created,
                     new ApiResponse<PaymentResponse>
                     {
                         Data = new PaymentResponse
