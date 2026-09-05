@@ -12,9 +12,10 @@ namespace SimplePubManager.Api.Controllers
 {
     /// <summary>
     /// Controller for payment and billing endpoints.
+    /// Organization ID is resolved from the request context by TenantResolutionMiddleware.
     /// </summary>
     [ApiController]
-    [Route("api/v1/organizations/{orgId}/payments")]
+    [Route("api/v1/payments")]
     [Authorize]
     public class PaymentsController : ControllerBase
     {
@@ -33,6 +34,19 @@ namespace SimplePubManager.Api.Controllers
             _paymentRepository = paymentRepository ?? throw new ArgumentNullException(nameof(paymentRepository));
             _billRepository = billRepository ?? throw new ArgumentNullException(nameof(billRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>
+        /// Gets the organization ID from the request context (set by TenantResolutionMiddleware).
+        /// </summary>
+        private Guid GetOrganizationId()
+        {
+            if (HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) && orgIdObj is Guid orgId)
+            {
+                return orgId;
+            }
+            throw new InvalidOperationException("Organization not found in request context");
+        }
         }
 
         /// <summary>
@@ -118,7 +132,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpPost("bills")]
         [ProducesResponseType(typeof(ApiResponse<BillResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateBill(Guid orgId, [FromBody] CreateBillRequest request)
+        public async Task<IActionResult> CreateBill([FromBody] CreateBillRequest request)
         {
             try
             {
@@ -147,7 +161,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdBill = await _billRepository.AddAsync(bill);
 
-                return CreatedAtAction(nameof(GetBillById), new { orgId, id = createdBill.Id },
+                return CreatedAtAction(nameof(GetById), new { id = createdBill.Id },
                     new ApiResponse<BillResponse>
                     {
                         Data = new BillResponse
@@ -185,7 +199,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpGet("bills/{id}")]
         [ProducesResponseType(typeof(ApiResponse<BillResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetBillById(Guid orgId, Guid id)
+        public async Task<IActionResult> GetBillById( Guid id)
         {
             try
             {
@@ -240,7 +254,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpPut("bills/{id}")]
         [ProducesResponseType(typeof(ApiResponse<BillResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateBill(Guid orgId, Guid id, [FromBody] CreateBillRequest request)
+        public async Task<IActionResult> UpdateBill( Guid id, [FromBody] CreateBillRequest request)
         {
             try
             {
@@ -379,7 +393,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<PaymentResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreatePayment(Guid orgId, [FromBody] CreatePaymentRequest request)
+        public async Task<IActionResult> CreatePayment([FromBody] CreatePaymentRequest request)
         {
             try
             {

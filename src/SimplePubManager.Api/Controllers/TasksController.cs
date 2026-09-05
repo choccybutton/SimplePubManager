@@ -12,9 +12,10 @@ namespace SimplePubManager.Api.Controllers
 {
     /// <summary>
     /// Controller for task management endpoints.
+    /// Organization ID is resolved from the request context by TenantResolutionMiddleware.
     /// </summary>
     [ApiController]
-    [Route("api/v1/organizations/{orgId}/tasks")]
+    [Route("api/v1/tasks")]
     [Authorize]
     public class TasksController : ControllerBase
     {
@@ -22,6 +23,18 @@ namespace SimplePubManager.Api.Controllers
         private readonly UserRepository _userRepository;
         private readonly AreaRepository _areaRepository;
         private readonly ILogger<TasksController> _logger;
+
+        /// <summary>
+        /// Gets the organization ID from the request context (set by TenantResolutionMiddleware).
+        /// </summary>
+        private Guid GetOrganizationId()
+        {
+            if (HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) && orgIdObj is Guid orgId)
+            {
+                return orgId;
+            }
+            throw new InvalidOperationException("Organization not found in request context");
+        }
 
         /// <summary>
         /// Initializes a new instance of the TasksController class.
@@ -39,9 +52,8 @@ namespace SimplePubManager.Api.Controllers
         }
 
         /// <summary>
-        /// Lists tasks for an organization with filtering and pagination.
+        /// Lists tasks for the organization with filtering and pagination.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="status">Optional status filter</param>
         /// <param name="assignedTo">Optional assignee ID filter</param>
         /// <param name="areaId">Optional area ID filter</param>
@@ -52,7 +64,6 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<PaginatedResponse<TaskResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetTasks(
-            Guid orgId,
             [FromQuery] string? status = null,
             [FromQuery] Guid? assignedTo = null,
             [FromQuery] Guid? areaId = null,
@@ -61,6 +72,8 @@ namespace SimplePubManager.Api.Controllers
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 if (page < 1) page = 1;
                 if (pageSize < 1) pageSize = 20;
                 if (pageSize > 100) pageSize = 100;
@@ -130,16 +143,16 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Creates a new task.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="request">The task creation request</param>
         /// <returns>The created task</returns>
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<TaskResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateTask(Guid orgId, [FromBody] CreateTaskRequest request)
+        public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
                 if (request == null || string.IsNullOrWhiteSpace(request.Title))
                 {
                     return BadRequest(new ApiResponse<object>
@@ -167,7 +180,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdTask = await _taskRepository.AddAsync(task);
 
-                return CreatedAtAction(nameof(GetTaskById), new { orgId, id = createdTask.Id },
+                return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.Id },
                     new ApiResponse<TaskResponse>
                     {
                         Data = new TaskResponse
@@ -200,16 +213,16 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Gets details for a specific task.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The task ID</param>
         /// <returns>The task details</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<TaskResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetTaskById(Guid orgId, Guid id)
+        public async Task<IActionResult> GetTaskById(Guid id)
         {
             try
             {
+                var orgId = GetOrganizationId();
                 var task = await _taskRepository.GetByIdAsync(id);
                 if (task == null || task.OrganizationId != orgId)
                 {
@@ -255,17 +268,17 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Updates a task.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The task ID</param>
         /// <param name="request">The update request</param>
         /// <returns>The updated task</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ApiResponse<TaskResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateTask(Guid orgId, Guid id, [FromBody] UpdateTaskRequest request)
+        public async Task<IActionResult> UpdateTask(Guid id, [FromBody] UpdateTaskRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
                 var task = await _taskRepository.GetByIdAsync(id);
                 if (task == null || task.OrganizationId != orgId)
                 {

@@ -11,14 +11,27 @@ namespace SimplePubManager.Api.Controllers
 {
     /// <summary>
     /// Controller for area management endpoints.
+    /// Organization ID is resolved from the request context by TenantResolutionMiddleware.
     /// </summary>
     [ApiController]
-    [Route("api/v1/organizations/{orgId}/areas")]
+    [Route("api/v1/areas")]
     [Authorize]
     public class AreasController : ControllerBase
     {
         private readonly AreaRepository _areaRepository;
         private readonly ILogger<AreasController> _logger;
+
+        /// <summary>
+        /// Gets the organization ID from the request context (set by TenantResolutionMiddleware).
+        /// </summary>
+        private Guid GetOrganizationId()
+        {
+            if (HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) && orgIdObj is Guid orgId)
+            {
+                return orgId;
+            }
+            throw new InvalidOperationException("Organization not found in request context");
+        }
 
         /// <summary>
         /// Initializes a new instance of the AreasController class.
@@ -32,9 +45,8 @@ namespace SimplePubManager.Api.Controllers
         }
 
         /// <summary>
-        /// Lists work areas for an organization.
+        /// Lists work areas for the organization.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="page">Page number (default 1)</param>
         /// <param name="pageSize">Items per page (default 20)</param>
         /// <returns>Paginated list of areas</returns>
@@ -42,12 +54,13 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<PaginatedResponse<AreaResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetAreas(
-            Guid orgId,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 if (page < 1) page = 1;
                 if (pageSize < 1) pageSize = 20;
                 if (pageSize > 100) pageSize = 100;
@@ -107,7 +120,7 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<AreaResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> CreateArea(Guid orgId, [FromBody] CreateAreaRequest request)
+        public async Task<IActionResult> CreateArea([FromBody] CreateAreaRequest request)
         {
             try
             {
@@ -134,7 +147,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdArea = await _areaRepository.AddAsync(area);
 
-                return CreatedAtAction(nameof(GetAreaById), new { orgId, id = createdArea.Id },
+                return CreatedAtAction(nameof(GetById), new { id = createdArea.Id },
                     new ApiResponse<AreaResponse>
                     {
                         Data = new AreaResponse
@@ -170,7 +183,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<AreaResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAreaById(Guid orgId, Guid id)
+        public async Task<IActionResult> GetAreaById( Guid id)
         {
             try
             {
@@ -225,7 +238,7 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<AreaResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> UpdateArea(Guid orgId, Guid id, [FromBody] UpdateAreaRequest request)
+        public async Task<IActionResult> UpdateArea( Guid id, [FromBody] UpdateAreaRequest request)
         {
             try
             {

@@ -12,9 +12,10 @@ namespace SimplePubManager.Api.Controllers
 {
     /// <summary>
     /// Controller for holiday management endpoints.
+    /// Organization ID is resolved from the request context by TenantResolutionMiddleware.
     /// </summary>
     [ApiController]
-    [Route("api/v1/organizations/{orgId}/holidays")]
+    [Route("api/v1/holidays")]
     [Authorize]
     public class HolidaysController : ControllerBase
     {
@@ -33,6 +34,19 @@ namespace SimplePubManager.Api.Controllers
             _holidayRepository = holidayRepository ?? throw new ArgumentNullException(nameof(holidayRepository));
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        /// <summary>
+        /// Gets the organization ID from the request context (set by TenantResolutionMiddleware).
+        /// </summary>
+        private Guid GetOrganizationId()
+        {
+            if (HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) && orgIdObj is Guid orgId)
+            {
+                return orgId;
+            }
+            throw new InvalidOperationException("Organization not found in request context");
+        }
         }
 
         /// <summary>
@@ -119,7 +133,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<HolidayResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateHoliday(Guid orgId, [FromBody] CreateHolidayRequest request)
+        public async Task<IActionResult> CreateHoliday([FromBody] CreateHolidayRequest request)
         {
             try
             {
@@ -175,7 +189,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdHoliday = await _holidayRepository.AddAsync(holiday);
 
-                return CreatedAtAction(nameof(GetHolidayById), new { orgId, id = createdHoliday.Id },
+                return CreatedAtAction(nameof(GetById), new { id = createdHoliday.Id },
                     new ApiResponse<HolidayResponse>
                     {
                         Data = new HolidayResponse
@@ -214,7 +228,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<HolidayResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetHolidayById(Guid orgId, Guid id)
+        public async Task<IActionResult> GetHolidayById( Guid id)
         {
             try
             {
@@ -271,7 +285,7 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<HolidayResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ApproveHoliday(Guid orgId, Guid id)
+        public async Task<IActionResult> ApproveHoliday( Guid id)
         {
             try
             {
@@ -332,7 +346,7 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<HolidayResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> RejectHoliday(Guid orgId, Guid id)
+        public async Task<IActionResult> RejectHoliday( Guid id)
         {
             try
             {

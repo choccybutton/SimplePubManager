@@ -12,9 +12,10 @@ namespace SimplePubManager.Api.Controllers
 {
     /// <summary>
     /// Controller for shared device management endpoints.
+    /// Organization ID is resolved from the request context by TenantResolutionMiddleware.
     /// </summary>
     [ApiController]
-    [Route("api/v1/organizations/{orgId}/devices")]
+    [Route("api/v1/devices")]
     [Authorize]
     public class DevicesController : ControllerBase
     {
@@ -36,9 +37,20 @@ namespace SimplePubManager.Api.Controllers
         }
 
         /// <summary>
-        /// Lists registered devices for an organization (manager only).
+        /// Gets the organization ID from the request context (set by TenantResolutionMiddleware).
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
+        private Guid GetOrganizationId()
+        {
+            if (HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) && orgIdObj is Guid orgId)
+            {
+                return orgId;
+            }
+            throw new InvalidOperationException("Organization not found in request context");
+        }
+
+        /// <summary>
+        /// Lists registered devices for the organization (manager only).
+        /// </summary>
         /// <param name="page">Page number (default 1)</param>
         /// <param name="pageSize">Items per page (default 20)</param>
         /// <returns>Paginated list of devices</returns>
@@ -48,12 +60,13 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetDevices(
-            Guid orgId,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 if (page < 1) page = 1;
                 if (pageSize < 1) pageSize = 20;
                 if (pageSize > 100) pageSize = 100;
@@ -106,7 +119,6 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Registers a new shared device (manager only).
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="request">The device registration request</param>
         /// <returns>The registered device</returns>
         [HttpPost("register")]
@@ -115,10 +127,12 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> RegisterDevice(Guid orgId, [FromBody] RegisterDeviceRequest request)
+        public async Task<IActionResult> RegisterDevice([FromBody] RegisterDeviceRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 if (request == null || string.IsNullOrWhiteSpace(request.DeviceId) ||
                     string.IsNullOrWhiteSpace(request.DeviceKey) || string.IsNullOrWhiteSpace(request.Name))
                 {
@@ -146,7 +160,7 @@ namespace SimplePubManager.Api.Controllers
                     });
                 }
 
-                return CreatedAtAction(nameof(GetDevices), new { orgId },
+                return CreatedAtAction(nameof(GetDevices), null,
                     new ApiResponse<DeviceResponse>
                     {
                         Data = new DeviceResponse
@@ -186,7 +200,7 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<DeviceResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> UpdateDevice(Guid orgId, Guid id, [FromBody] UpdateDeviceRequest request)
+        public async Task<IActionResult> UpdateDevice( Guid id, [FromBody] UpdateDeviceRequest request)
         {
             try
             {

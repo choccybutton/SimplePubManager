@@ -13,9 +13,10 @@ namespace SimplePubManager.Api.Controllers
 {
     /// <summary>
     /// Controller for shift management endpoints.
+    /// Organization ID is resolved from the request context by TenantResolutionMiddleware.
     /// </summary>
     [ApiController]
-    [Route("api/v1/organizations/{orgId}/shifts")]
+    [Route("api/v1/shifts")]
     [Authorize]
     public class ShiftsController : ControllerBase
     {
@@ -25,6 +26,18 @@ namespace SimplePubManager.Api.Controllers
         private readonly AuthService _authService;
         private readonly PaymentCalculationService _paymentCalculationService;
         private readonly ILogger<ShiftsController> _logger;
+
+        /// <summary>
+        /// Gets the organization ID from the request context (set by TenantResolutionMiddleware).
+        /// </summary>
+        private Guid GetOrganizationId()
+        {
+            if (HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) && orgIdObj is Guid orgId)
+            {
+                return orgId;
+            }
+            throw new InvalidOperationException("Organization not found in request context");
+        }
 
         /// <summary>
         /// Initializes a new instance of the ShiftsController class.
@@ -46,9 +59,8 @@ namespace SimplePubManager.Api.Controllers
         }
 
         /// <summary>
-        /// Lists shifts for an organization with pagination and filtering.
+        /// Lists shifts for the organization with pagination and filtering.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="status">Optional shift status filter</param>
         /// <param name="staffId">Optional staff ID filter</param>
         /// <param name="page">Page number (default 1)</param>
@@ -58,7 +70,6 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<PaginatedResponse<ShiftResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetShifts(
-            Guid orgId,
             [FromQuery] string? status = null,
             [FromQuery] Guid? staffId = null,
             [FromQuery] int page = 1,
@@ -66,6 +77,8 @@ namespace SimplePubManager.Api.Controllers
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 if (page < 1) page = 1;
                 if (pageSize < 1) pageSize = 20;
                 if (pageSize > 100) pageSize = 100;
@@ -137,16 +150,17 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Creates a new shift.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="request">The shift creation request</param>
         /// <returns>The created shift</returns>
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponse<ShiftResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateShift(Guid orgId, [FromBody] CreateShiftRequest request)
+        public async Task<IActionResult> CreateShift([FromBody] CreateShiftRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 if (request == null || request.StaffId == Guid.Empty)
                 {
                     return BadRequest(new ApiResponse<object>
@@ -199,7 +213,7 @@ namespace SimplePubManager.Api.Controllers
 
                 var createdShift = await _shiftRepository.AddAsync(shift);
 
-                return CreatedAtAction(nameof(GetShiftById), new { orgId, id = createdShift.Id },
+                return CreatedAtAction(nameof(GetShiftById), new { id = createdShift.Id },
                     new ApiResponse<ShiftResponse>
                     {
                         Data = new ShiftResponse
@@ -233,16 +247,17 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Gets details for a specific shift.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The shift ID</param>
         /// <returns>The shift details</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<ShiftResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetShiftById(Guid orgId, Guid id)
+        public async Task<IActionResult> GetShiftById(Guid id)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 var shift = await _shiftRepository.GetByIdAsync(id);
                 if (shift == null || shift.OrganizationId != orgId)
                 {
@@ -289,17 +304,18 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Updates a shift.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The shift ID</param>
         /// <param name="request">The update request</param>
         /// <returns>The updated shift</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ApiResponse<ShiftResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateShift(Guid orgId, Guid id, [FromBody] UpdateShiftRequest request)
+        public async Task<IActionResult> UpdateShift(Guid id, [FromBody] UpdateShiftRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 var shift = await _shiftRepository.GetByIdAsync(id);
                 if (shift == null || shift.OrganizationId != orgId)
                 {
@@ -359,16 +375,17 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Deletes/cancels a shift.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The shift ID</param>
         /// <returns>No content on success</returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteShift(Guid orgId, Guid id)
+        public async Task<IActionResult> DeleteShift(Guid id)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 var shift = await _shiftRepository.GetByIdAsync(id);
                 if (shift == null || shift.OrganizationId != orgId)
                 {
@@ -405,17 +422,18 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Records a clock-in for a shift.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The shift ID</param>
         /// <param name="request">The clock-in request</param>
         /// <returns>Updated shift details</returns>
         [HttpPost("{id}/clock-in")]
         [ProducesResponseType(typeof(ApiResponse<ShiftResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ClockIn(Guid orgId, Guid id, [FromBody] ClockInRequest request)
+        public async Task<IActionResult> ClockIn(Guid id, [FromBody] ClockInRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 var shift = await _shiftRepository.GetByIdAsync(id);
                 if (shift == null || shift.OrganizationId != orgId)
                 {
@@ -465,17 +483,18 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Records a clock-out for a shift.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The shift ID</param>
         /// <param name="request">The clock-out request (unused, for consistency)</param>
         /// <returns>Updated shift details</returns>
         [HttpPost("{id}/clock-out")]
         [ProducesResponseType(typeof(ApiResponse<ShiftResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ClockOut(Guid orgId, Guid id, [FromBody] ClockInRequest request)
+        public async Task<IActionResult> ClockOut(Guid id, [FromBody] ClockInRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 var shift = await _shiftRepository.GetByIdAsync(id);
                 if (shift == null || shift.OrganizationId != orgId)
                 {
@@ -526,17 +545,18 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Updates areas assigned to a shift.
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The shift ID</param>
         /// <param name="request">The update request with area IDs</param>
         /// <returns>Updated shift details</returns>
         [HttpPut("{id}/areas")]
         [ProducesResponseType(typeof(ApiResponse<ShiftResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateShiftAreas(Guid orgId, Guid id, [FromBody] UpdateShiftAreasRequest request)
+        public async Task<IActionResult> UpdateShiftAreas(Guid id, [FromBody] UpdateShiftAreasRequest request)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 var shift = await _shiftRepository.GetShiftWithAreasAsync(id);
                 if (shift == null || shift.OrganizationId != orgId)
                 {
@@ -601,7 +621,6 @@ namespace SimplePubManager.Api.Controllers
         /// <summary>
         /// Approves a shift (manager only).
         /// </summary>
-        /// <param name="orgId">The organization ID</param>
         /// <param name="id">The shift ID</param>
         /// <returns>Updated shift details</returns>
         [HttpPost("{id}/approve")]
@@ -609,10 +628,12 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<ShiftResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ApproveShift(Guid orgId, Guid id)
+        public async Task<IActionResult> ApproveShift(Guid id)
         {
             try
             {
+                var orgId = GetOrganizationId();
+
                 var shift = await _shiftRepository.GetByIdAsync(id);
                 if (shift == null || shift.OrganizationId != orgId)
                 {

@@ -13,9 +13,10 @@ namespace SimplePubManager.Api.Controllers
 {
     /// <summary>
     /// Controller for staff management endpoints.
+    /// Organization ID is resolved from the request context by TenantResolutionMiddleware.
     /// </summary>
     [ApiController]
-    [Route("api/v1/organizations/{orgId}/staff")]
+    [Route("api/v1/staff")]
     [Authorize]
     public class StaffController : ControllerBase
     {
@@ -40,7 +41,19 @@ namespace SimplePubManager.Api.Controllers
         }
 
         /// <summary>
-        /// Lists staff members for an organization.
+        /// Gets the organization ID from the request context (set by TenantResolutionMiddleware).
+        /// </summary>
+        private Guid GetOrganizationId()
+        {
+            if (HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) && orgIdObj is Guid orgId)
+            {
+                return orgId;
+            }
+            throw new InvalidOperationException("Organization not found in request context");
+        }
+
+        /// <summary>
+        /// Lists staff members for the organization.
         /// </summary>
         /// <param name="orgId">The organization ID</param>
         /// <param name="page">Page number (default 1)</param>
@@ -117,7 +130,7 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<StaffResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> AddStaff(Guid orgId, [FromBody] RegisterUserRequest request)
+        public async Task<IActionResult> AddStaff([FromBody] RegisterUserRequest request)
         {
             try
             {
@@ -159,7 +172,7 @@ namespace SimplePubManager.Api.Controllers
                     });
                 }
 
-                return CreatedAtAction(nameof(GetStaffById), new { orgId, id = user.Id },
+                return CreatedAtAction(nameof(GetById), new { id = user.Id },
                     new ApiResponse<StaffResponse>
                     {
                         Data = new StaffResponse
@@ -197,7 +210,7 @@ namespace SimplePubManager.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<StaffResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetStaffById(Guid orgId, Guid id)
+        public async Task<IActionResult> GetStaffById( Guid id)
         {
             try
             {
@@ -254,7 +267,7 @@ namespace SimplePubManager.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<StaffResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> UpdateStaff(Guid orgId, Guid id, [FromBody] UpdateStaffRequest request)
+        public async Task<IActionResult> UpdateStaff( Guid id, [FromBody] UpdateStaffRequest request)
         {
             try
             {
