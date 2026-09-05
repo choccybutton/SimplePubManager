@@ -10,18 +10,21 @@ namespace SimplePubManager.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Generate password hash dynamically for "TestPass123!" with work factor 10
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword("TestPass123!", 10);
+
             // Insert Organization
             migrationBuilder.Sql(
-                @"INSERT INTO ""Organizations"" (""Id"", ""Name"", ""CreatedAt"")
-                  VALUES ('00000000-0000-0000-0000-000000000001', 'TestPub', '2026-09-04T00:00:00Z');");
+                @"INSERT INTO ""Organizations"" (""Id"", ""Name"", ""Subdomain"", ""CreatedAt"")
+                  VALUES ('00000000-0000-0000-0000-000000000001', 'TestPub', 'testpub', '2026-09-04T00:00:00Z');");
 
-            // Insert Users (Manager, Supervisor, Staff)
+            // Insert Users (Manager, Supervisor, Staff) with dynamically generated hash
             migrationBuilder.Sql(
-                @"INSERT INTO ""Users"" (""Id"", ""OrganizationId"", ""Name"", ""Email"", ""PasswordHash"", ""Role"", ""Status"", ""CreatedAt"")
+                $@"INSERT INTO ""Users"" (""Id"", ""OrganizationId"", ""Name"", ""Email"", ""PasswordHash"", ""Role"", ""Status"", ""CreatedAt"")
                   VALUES
-                  ('00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000001', 'John Manager', 'manager@test.com', '$2a$11$KIq1RjBZbhBXDn2.kF/R4u3B1Rb5t1ZV5cVjKKv.nB7Pu3r0VRggi', 0, 0, '2026-09-04T00:00:00Z'),
-                  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000001', 'Jane Supervisor', 'supervisor@test.com', '$2a$11$KIq1RjBZbhBXDn2.kF/R4u3B1Rb5t1ZV5cVjKKv.nB7Pu3r0VRggi', 1, 0, '2026-09-04T00:00:00Z'),
-                  ('00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-000000000001', 'Bob Staff', 'staff@test.com', '$2a$11$KIq1RjBZbhBXDn2.kF/R4u3B1Rb5t1ZV5cVjKKv.nB7Pu3r0VRggi', 2, 0, '2026-09-04T00:00:00Z');");
+                  ('00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000001', 'John Manager', 'manager@test.com', '{passwordHash}', 0, 0, '2026-09-04T00:00:00Z'),
+                  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000001', 'Jane Supervisor', 'supervisor@test.com', '{passwordHash}', 1, 0, '2026-09-04T00:00:00Z'),
+                  ('00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-000000000001', 'Bob Staff', 'staff@test.com', '{passwordHash}', 2, 0, '2026-09-04T00:00:00Z');");
 
             // Insert Areas (Kitchen, Bar, Dining)
             migrationBuilder.Sql(

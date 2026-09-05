@@ -57,7 +57,20 @@ namespace SimplePubManager.Api.Controllers
                     });
                 }
 
-                var (token, user) = await _authService.LoginAsync(request.Email, request.Password, request.OrganizationId);
+                // Get organization ID from middleware (resolved from subdomain)
+                if (!HttpContext.Items.TryGetValue("OrganizationId", out var orgIdObj) || orgIdObj is not Guid organizationId)
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Error = new ApiError
+                        {
+                            Code = "TENANT_NOT_FOUND",
+                            Message = "Could not resolve organization from request. Please access via the correct subdomain."
+                        }
+                    });
+                }
+
+                var (token, user) = await _authService.LoginAsync(request.Email, request.Password, organizationId);
 
                 if (token == null || user == null)
                 {

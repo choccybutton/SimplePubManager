@@ -89,6 +89,7 @@ namespace SimplePubManager.Api.Tests.Fixtures
             {
                 Id = TestOrganizationId,
                 Name = "Test Pub",
+                Subdomain = "testpub",
                 CreatedAt = DateTime.UtcNow
             };
 

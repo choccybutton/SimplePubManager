@@ -1,3 +1,5 @@
+using SimplePubManager.Domain.Entities.Models;
+
 namespace SimplePubManager.Domain.Entities
 {
     /// <summary>
@@ -14,6 +16,11 @@ namespace SimplePubManager.Domain.Entities
         /// Name of the organization/pub.
         /// </summary>
         public required string Name { get; set; }
+
+        /// <summary>
+        /// Subdomain for this organization (e.g., "tenant1" in "tenant1.myapp.com").
+        /// </summary>
+        public required string Subdomain { get; set; }
 
         /// <summary>
         /// Timestamp when the organization was created.
@@ -38,7 +45,7 @@ namespace SimplePubManager.Domain.Entities
         /// <summary>
         /// Collection of tasks for this organization.
         /// </summary>
-        public ICollection<Task> Tasks { get; set; } = new List<Task>();
+        public ICollection<Models.Task> Tasks { get; set; } = new List<Models.Task>();
 
         /// <summary>
         /// Collection of holidays for this organization.

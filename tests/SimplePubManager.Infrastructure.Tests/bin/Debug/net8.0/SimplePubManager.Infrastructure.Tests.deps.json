@@ -16,6 +16,17 @@
           "SimplePubManager.Infrastructure.Tests.dll": {}
         }
       },
+      "AutoMapper/12.0.1": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.1/AutoMapper.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.1.0"
+          }
+        }
+      },
       "BCrypt.Net-Next/4.0.3": {
         "runtime": {
           "lib/net6.0/BCrypt.Net-Next.dll": {
@@ -46,6 +57,7 @@
           }
         }
       },
+      "Microsoft.CSharp/4.7.0": {},
       "Microsoft.EntityFrameworkCore/8.0.11": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Abstractions": "8.0.11",
@@ -342,6 +354,7 @@
       },
       "SimplePubManager.Infrastructure/1.0.0": {
         "dependencies": {
+          "AutoMapper": "12.0.1",
           "BCrypt.Net-Next": "4.0.3",
           "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11",
@@ -372,6 +385,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "AutoMapper/12.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hvV62vl6Hp/WfQ24yzo3Co9+OPl8wH8hApwVtgWpiAynVJkUcs7xvehnSftawL8Pe8FrPffBRM3hwzLQqWDNjA==",
+      "path": "automapper/12.0.1",
+      "hashPath": "automapper.12.0.1.nupkg.sha512"
+    },
     "BCrypt.Net-Next/4.0.3": {
       "type": "package",
       "serviceable": true,
@@ -392,6 +412,13 @@
       "sha512": "sha512-ZXhHT2YwP9lajrwSKbLlFqsmCCvFJMoRSK9t7sImfnCyd0OB3MhgxdoMcVqxbq1iyxD6mD2fiackWmBb7ayiXQ==",
       "path": "fluentassertions/6.12.0",
       "hashPath": "fluentassertions.6.12.0.nupkg.sha512"
+    },
+    "Microsoft.CSharp/4.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
+      "path": "microsoft.csharp/4.7.0",
+      "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore/8.0.11": {
       "type": "package",

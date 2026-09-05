@@ -1,3 +1,5 @@
+using SimplePubManager.Domain.Entities.Models;
+
 namespace SimplePubManager.Domain.Entities
 {
     /// <summary>
@@ -43,6 +45,6 @@ namespace SimplePubManager.Domain.Entities
         /// <summary>
         /// Collection of tasks assigned to this area.
         /// </summary>
-        public ICollection<Task> Tasks { get; set; } = new List<Task>();
+        public ICollection<Models.Task> Tasks { get; set; } = new List<Models.Task>();
     }
 }

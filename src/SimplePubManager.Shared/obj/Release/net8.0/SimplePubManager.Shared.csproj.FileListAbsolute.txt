@@ -1,0 +1,12 @@
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\bin\Release\net8.0\SimplePubManager.Shared.deps.json
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\bin\Release\net8.0\SimplePubManager.Shared.dll
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\bin\Release\net8.0\SimplePubManager.Shared.pdb
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\SimplePubManager.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\SimplePubManager.Shared.AssemblyInfoInputs.cache
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\SimplePubManager.Shared.AssemblyInfo.cs
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\SimplePubManager.Shared.csproj.CoreCompileInputs.cache
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\SimplePubManager.Shared.sourcelink.json
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\SimplePubManager.Shared.dll
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\refint\SimplePubManager.Shared.dll
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\SimplePubManager.Shared.pdb
+C:\Dev\repos\SimplePubManager\src\SimplePubManager.Shared\obj\Release\net8.0\ref\SimplePubManager.Shared.dll

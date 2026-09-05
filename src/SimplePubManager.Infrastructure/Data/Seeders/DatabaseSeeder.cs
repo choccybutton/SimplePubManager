@@ -19,6 +19,7 @@ namespace SimplePubManager.Infrastructure.Data.Seeders
             {
                 Id = new Guid("00000000-0000-0000-0000-000000000001"),
                 Name = "Test Pub",
+                Subdomain = "testpub",
                 CreatedAt = DateTime.UtcNow
             };
         }

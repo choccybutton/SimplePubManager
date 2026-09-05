@@ -17,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register Repositories
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<OrganizationRepository>();
 builder.Services.AddScoped<AreaRepository>();
 builder.Services.AddScoped<ShiftRepository>();
 builder.Services.AddScoped<PaymentRepository>();
@@ -106,27 +107,30 @@ var app = builder.Build();
 // 1. Exception handling middleware
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-// 2. CORS
+// 2. Tenant resolution middleware (resolves organization from subdomain)
+app.UseMiddleware<TenantResolutionMiddleware>();
+
+// 3. CORS
 app.UseCors("AllowFrontend");
 
-// 3. Authentication & Authorization
+// 4. Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 4. Swagger (development only)
+// 5. Swagger (development only)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// 5. Routing
+// 6. Routing
 app.UseRouting();
 
-// 6. Endpoints
+// 7. Endpoints
 app.MapControllers();
 
-// 7. Health check endpoint
+// 8. Health check endpoint
 app.MapGet("/health", () => Results.Ok("API is running"))
     .WithName("Health")
     .AllowAnonymous();

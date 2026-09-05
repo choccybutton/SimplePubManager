@@ -1,0 +1,17 @@
+-- Seed test data
+INSERT INTO "Organizations" ("Id", "Name", "CreatedAt")
+VALUES ('00000000-0000-0000-0000-000000000001', 'Test Pub', NOW());
+
+INSERT INTO "Users" ("Id", "OrganizationId", "Name", "Email", "PasswordHash", "Role", "Status", "CreatedAt")
+VALUES
+  ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000001', 'Manager', 'manager@test.com', '/xmDLpVFN5/sMQNqZuBeKpLZ0H5SQfG5Pt5dXbVBmCT5GmIZfAK', 0, 0, NOW()),
+  ('00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-000000000001', 'Supervisor', 'supervisor@test.com', '/xmDLpVFN5/sMQNqZuBeKpLZ0H5SQfG5Pt5dXbVBmCT5GmIZfAK', 1, 0, NOW()),
+  ('00000000-0000-0000-0000-000000000013', '00000000-0000-0000-0000-000000000001', 'Staff', 'staff@test.com', '/xmDLpVFN5/sMQNqZuBeKpLZ0H5SQfG5Pt5dXbVBmCT5GmIZfAK', 2, 0, NOW());
+
+INSERT INTO "Areas" ("Id", "OrganizationId", "Name", "Description", "CreatedAt")
+VALUES
+  ('00000000-0000-0000-0000-000000000021', '00000000-0000-0000-0000-000000000001', 'Kitchen', 'Kitchen', NOW()),
+  ('00000000-0000-0000-0000-000000000022', '00000000-0000-0000-0000-000000000001', 'Bar', 'Bar', NOW()),
+  ('00000000-0000-0000-0000-000000000023', '00000000-0000-0000-0000-000000000001', 'Front of House', 'FOH', NOW());
+
+SELECT 'Seeded!' as status;
