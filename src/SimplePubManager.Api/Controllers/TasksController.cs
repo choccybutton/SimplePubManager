@@ -96,7 +96,7 @@ namespace SimplePubManager.Api.Controllers
                     {
                         Id = t.Id,
                         Title = t.Title,
-                        Description = t.Description,
+                        Description = t.Description ?? string.Empty,
                         AssignedToId = t.AssignedToUserId,
                         Status = t.Status.ToString(),
                         AreaId = t.AssignedToAreaId,
@@ -174,7 +174,7 @@ namespace SimplePubManager.Api.Controllers
                         {
                             Id = createdTask.Id,
                             Title = createdTask.Title,
-                            Description = createdTask.Description,
+                            Description = createdTask.Description ?? string.Empty,
                             AssignedToId = createdTask.AssignedToUserId,
                             Status = createdTask.Status.ToString(),
                             AreaId = createdTask.AssignedToAreaId,
@@ -229,7 +229,7 @@ namespace SimplePubManager.Api.Controllers
                     {
                         Id = task.Id,
                         Title = task.Title,
-                        Description = task.Description,
+                        Description = task.Description ?? string.Empty,
                         AssignedToId = task.AssignedToUserId,
                         Status = task.Status.ToString(),
                         AreaId = task.AssignedToAreaId,
@@ -308,7 +308,7 @@ namespace SimplePubManager.Api.Controllers
                     {
                         Id = task.Id,
                         Title = task.Title,
-                        Description = task.Description,
+                        Description = task.Description ?? string.Empty,
                         AssignedToId = task.AssignedToUserId,
                         Status = task.Status.ToString(),
                         AreaId = task.AssignedToAreaId,
@@ -367,7 +367,7 @@ namespace SimplePubManager.Api.Controllers
                     {
                         Id = task.Id,
                         Title = task.Title,
-                        Description = task.Description,
+                        Description = task.Description ?? string.Empty,
                         AssignedToId = task.AssignedToUserId,
                         Status = task.Status.ToString(),
                         AreaId = task.AssignedToAreaId,

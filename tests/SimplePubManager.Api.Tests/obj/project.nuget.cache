@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "PS4FRqKRUeE=",
-  "success": false,
+  "dgSpecHash": "3tsE06EcGOA=",
+  "success": true,
   "projectFilePath": "C:\\Dev\\repos\\SimplePubManager\\tests\\SimplePubManager.Api.Tests\\SimplePubManager.Api.Tests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\MartinButton\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\fluentassertions\\6.12.0\\fluentassertions.6.12.0.nupkg.sha512",
@@ -12,6 +13,7 @@
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.aspnetcore.mvc.testing\\8.0.11\\microsoft.aspnetcore.mvc.testing.8.0.11.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.aspnetcore.testhost\\8.0.11\\microsoft.aspnetcore.testhost.8.0.11.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.codecoverage\\17.9.0\\microsoft.codecoverage.17.9.0.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.11\\microsoft.entityframeworkcore.8.0.11.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.11\\microsoft.entityframeworkcore.abstractions.8.0.11.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.11\\microsoft.entityframeworkcore.analyzers.8.0.11.nupkg.sha512",
@@ -81,15 +83,5 @@
     "C:\\Users\\MartinButton\\.nuget\\packages\\xunit.extensibility.execution\\2.6.6\\xunit.extensibility.execution.2.6.6.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\xunit.runner.visualstudio\\2.5.6\\xunit.runner.visualstudio.2.5.6.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1102",
-      "level": "Error",
-      "message": "Unable to find package AutoMapper.Extensions.Microsoft.DependencyInjection with version (>= 13.0.1)\r\n  - Found 26 version(s) in nuget.org [ Nearest version: 12.0.1 ]\r\n  - Found 0 version(s) in Microsoft Visual Studio Offline Packages\r\n  - Found 0 version(s) in C:\\Program Files\\dotnet\\library-packs",
-      "libraryId": "AutoMapper.Extensions.Microsoft.DependencyInjection",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }
