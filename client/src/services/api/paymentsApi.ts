@@ -10,10 +10,10 @@ import {
 
 export const paymentsApi = {
   getPayments: async (params: GetPaymentsParams): Promise<PaginatedResponse<Payment>> => {
-    const response = await axiosInstance.get<PaginatedResponse<Payment>>('/payments', {
+    const response = await axiosInstance.get<any>('/payments', {
       params,
     });
-    return response.data;
+    return response.data.data;  // Unwrap ApiResponse to get PaginatedResponse
   },
 
   getPayment: async (paymentId: string): Promise<Payment> => {
@@ -32,10 +32,10 @@ export const paymentsApi = {
   },
 
   getBills: async (params: GetPaymentsParams): Promise<PaginatedResponse<Bill>> => {
-    const response = await axiosInstance.get<PaginatedResponse<Bill>>('/bills', {
+    const response = await axiosInstance.get<any>('/bills', {
       params,
     });
-    return response.data;
+    return response.data.data;  // Unwrap ApiResponse to get PaginatedResponse
   },
 
   getBill: async (billId: string): Promise<Bill> => {

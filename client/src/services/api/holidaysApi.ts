@@ -9,10 +9,10 @@ import {
 
 export const holidaysApi = {
   getHolidays: async (params: GetHolidaysParams): Promise<PaginatedResponse<Holiday>> => {
-    const response = await axiosInstance.get<PaginatedResponse<Holiday>>('/holidays', {
+    const response = await axiosInstance.get<any>('/holidays', {
       params,
     });
-    return response.data;
+    return response.data.data;  // Unwrap ApiResponse to get PaginatedResponse
   },
 
   getHoliday: async (holidayId: string): Promise<Holiday> => {

@@ -10,10 +10,10 @@ import {
 
 export const tasksApi = {
   getTasks: async (params: GetTasksParams): Promise<PaginatedResponse<Task>> => {
-    const response = await axiosInstance.get<PaginatedResponse<Task>>('/tasks', {
+    const response = await axiosInstance.get<any>('/tasks', {
       params,
     });
-    return response.data;
+    return response.data.data;  // Unwrap ApiResponse to get PaginatedResponse
   },
 
   getTask: async (taskId: string): Promise<Task> => {

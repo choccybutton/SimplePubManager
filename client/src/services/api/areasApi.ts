@@ -3,8 +3,8 @@ import { Area, CreateAreaRequest, UpdateAreaRequest, PaginatedResponse } from '.
 
 export const areasApi = {
   getAreas: async (params?: any): Promise<PaginatedResponse<Area> | Area[]> => {
-    const response = await axiosInstance.get('/areas', { params });
-    return response.data;
+    const response = await axiosInstance.get<any>('/areas', { params });
+    return response.data.data;  // Unwrap ApiResponse to get PaginatedResponse
   },
 
   getArea: async (areaId: string): Promise<Area> => {

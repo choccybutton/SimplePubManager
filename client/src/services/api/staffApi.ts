@@ -3,10 +3,10 @@ import { User, GetStaffParams, UpdateStaffRequest, PaginatedResponse } from '../
 
 export const staffApi = {
   getStaff: async (params: GetStaffParams): Promise<PaginatedResponse<User>> => {
-    const response = await axiosInstance.get<PaginatedResponse<User>>('/staff', {
+    const response = await axiosInstance.get<any>('/staff', {
       params,
     });
-    return response.data;
+    return response.data.data;  // Unwrap ApiResponse to get PaginatedResponse
   },
 
   getStaffMember: async (staffId: string): Promise<User> => {

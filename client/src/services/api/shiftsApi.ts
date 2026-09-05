@@ -16,10 +16,10 @@ import {
  */
 export const shiftsApi = {
   getShifts: async (params: GetShiftsParams): Promise<PaginatedResponse<Shift>> => {
-    const response = await axiosInstance.get<PaginatedResponse<Shift>>('/shifts', {
+    const response = await axiosInstance.get<any>('/shifts', {
       params,
     });
-    return response.data;
+    return response.data.data;  // Unwrap ApiResponse to get PaginatedResponse
   },
 
   getShift: async (shiftId: string): Promise<Shift> => {
