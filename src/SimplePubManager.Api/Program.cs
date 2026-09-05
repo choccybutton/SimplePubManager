@@ -113,19 +113,19 @@ app.UseMiddleware<TenantResolutionMiddleware>();
 // 3. CORS
 app.UseCors("AllowFrontend");
 
-// 4. Authentication & Authorization
+// 4. Routing (must come before authentication and authorization)
+app.UseRouting();
+
+// 5. Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 5. Swagger (development only)
+// 6. Swagger (development only)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// 6. Routing
-app.UseRouting();
 
 // 7. Endpoints
 app.MapControllers();

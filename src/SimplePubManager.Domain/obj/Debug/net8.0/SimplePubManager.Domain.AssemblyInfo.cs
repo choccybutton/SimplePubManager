@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SimplePubManager.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c5b0e19eb5dd5d0605355051f41b141f84bf2c8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8899a5dac0a9cecdef50a5c2e153c857ad2e9ef")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimplePubManager.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimplePubManager.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
