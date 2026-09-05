@@ -1,14 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "paRYa8/EsbE=",
+  "dgSpecHash": "kKnRgwXMOZU=",
   "success": true,
   "projectFilePath": "C:\\Dev\\repos\\SimplePubManager\\tests\\SimplePubManager.Infrastructure.Tests\\SimplePubManager.Infrastructure.Tests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\MartinButton\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\MartinButton\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\fluentassertions\\6.12.0\\fluentassertions.6.12.0.nupkg.sha512",
-    "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.11\\microsoft.entityframeworkcore.8.0.11.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.11\\microsoft.entityframeworkcore.abstractions.8.0.11.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.11\\microsoft.entityframeworkcore.analyzers.8.0.11.nupkg.sha512",
@@ -34,16 +33,5 @@
     "C:\\Users\\MartinButton\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.0.0\\system.identitymodel.tokens.jwt.8.0.0.nupkg.sha512",
     "C:\\Users\\MartinButton\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.4.0\\system.security.cryptography.protecteddata.4.4.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "SimplePubManager.Infrastructure depends on System.IdentityModel.Tokens.Jwt (>= 7.8.0) but System.IdentityModel.Tokens.Jwt 7.8.0 was not found. System.IdentityModel.Tokens.Jwt 8.0.0 was resolved instead.",
-      "libraryId": "System.IdentityModel.Tokens.Jwt",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }
