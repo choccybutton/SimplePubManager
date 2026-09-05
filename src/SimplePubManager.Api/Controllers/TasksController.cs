@@ -353,10 +353,11 @@ namespace SimplePubManager.Api.Controllers
         [HttpPost("{id}/complete")]
         [ProducesResponseType(typeof(ApiResponse<TaskResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CompleteTask(Guid orgId, Guid id)
+        public async Task<IActionResult> CompleteTask(Guid id)
         {
             try
             {
+                var orgId = GetOrganizationId();
                 var task = await _taskRepository.GetByIdAsync(id);
                 if (task == null || task.OrganizationId != orgId)
                 {

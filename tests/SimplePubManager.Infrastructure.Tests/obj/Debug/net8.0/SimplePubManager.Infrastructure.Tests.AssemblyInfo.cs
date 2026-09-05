@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SimplePubManager.Infrastructure.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb131d6394f269758987245da7cb5bfdd5517540")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c5b0e19eb5dd5d0605355051f41b141f84bf2c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimplePubManager.Infrastructure.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimplePubManager.Infrastructure.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
