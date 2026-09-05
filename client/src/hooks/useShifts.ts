@@ -29,9 +29,9 @@ export const useShifts = (): UseShiftsReturn => {
     setError(null);
     try {
       const response: PaginatedResponse<Shift> = await shiftsApi.getShifts(params);
-      setShifts(response.data);
+      setShifts(response.items);
       setTotalCount(response.totalCount);
-      setCurrentPage(response.pageNumber);
+      setCurrentPage(response.page);
       setPageSize(response.pageSize);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch shifts');

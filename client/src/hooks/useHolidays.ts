@@ -28,9 +28,9 @@ export const useHolidays = (): UseHolidaysReturn => {
     setError(null);
     try {
       const response: PaginatedResponse<Holiday> = await holidaysApi.getHolidays(params);
-      setHolidays(response.data);
+      setHolidays(response.items);
       setTotalCount(response.totalCount);
-      setCurrentPage(response.pageNumber);
+      setCurrentPage(response.page);
       setPageSize(response.pageSize);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch holidays');

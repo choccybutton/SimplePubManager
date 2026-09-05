@@ -29,9 +29,9 @@ export const useTasks = (): UseTasksReturn => {
     setError(null);
     try {
       const response: PaginatedResponse<Task> = await tasksApi.getTasks(params);
-      setTasks(response.data);
+      setTasks(response.items);
       setTotalCount(response.totalCount);
-      setCurrentPage(response.pageNumber);
+      setCurrentPage(response.page);
       setPageSize(response.pageSize);
     } catch (err: any) {
       setError(err.message || 'Failed to fetch tasks');

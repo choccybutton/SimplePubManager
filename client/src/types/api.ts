@@ -24,9 +24,9 @@ export interface QuickSwapResponse {
 }
 
 export interface PaginatedResponse<T> {
-  data: T[];
+  items: T[];
   totalCount: number;
-  pageNumber: number;
+  page: number;
   pageSize: number;
   totalPages: number;
 }
