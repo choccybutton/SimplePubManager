@@ -5,6 +5,7 @@ import { DeviceProvider } from './context/DeviceContext';
 import { ErrorBoundary } from './components/Common/ErrorBoundary';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { UserRole } from './types';
+import './styles/datepicker.css';
 
 // Pages
 import { LoginPage } from './pages/LoginPage';
