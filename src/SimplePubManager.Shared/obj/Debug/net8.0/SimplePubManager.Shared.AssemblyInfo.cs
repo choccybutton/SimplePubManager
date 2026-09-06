@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SimplePubManager.Shared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8899a5dac0a9cecdef50a5c2e153c857ad2e9ef")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b43ff24f3fad657eb773658b187ba8e6663b89b3")]
 [assembly: System.Reflection.AssemblyProductAttribute("SimplePubManager.Shared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SimplePubManager.Shared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
